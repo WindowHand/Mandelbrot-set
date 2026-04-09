@@ -1,0 +1,61 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Roboto Mono", monospace;
+    /* overflow: hidden; */
+}
+
+html, body {
+    width: 100vw;
+    height: 100vh;
+}
+
+canvas {
+    position: absolute;
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+}
+
+.pointer {
+    position: fixed;
+    top: 50vh;
+    left: 50vw;
+    mix-blend-mode: difference;
+    color: white;
+    transform: translate(-50%, -50%);
+    user-select: none;
+}
+
+.overlay {
+    position: fixed;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    bottom: 10px;
+    right: 10px; 
+    padding: 9px;
+    border-radius: 14px;
+    background: white;
+    mix-blend-mode: difference;
+    opacity: 0.5;
+}
+
+.overlay:hover {
+    mix-blend-mode: unset;
+    background-color: black;
+    opacity: 1;
+}
+
+.overlay > label {
+    mix-blend-mode: difference;
+    color: white;
+}
+
+.overlay > input {
+    mix-blend-mode: difference;
+    color: white;
+}

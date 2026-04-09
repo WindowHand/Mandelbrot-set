@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+        <meta charset="utf-8"/>
+        <link rel="stylesheet" href="styles/style.css"/>
+        <script src="index.js" defer></script>
+        <title>Mandelbrot set</title>
+    </head>
+    <body>
+        <canvas id="mandelbrotCanvas">
+            <p>Your browser does not support the HTML5 canvas tag.</p>
+        </canvas>
+        <p class="pointer">+</p>
+        <div class="overlay">
+            <label>Iterations: </label>
+            <input id="sliderIterations" type="range" min="0" max="200" value="20" step="2">
+        </div>
+        
+    </body>
+</html>
