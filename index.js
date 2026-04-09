@@ -1,12 +1,3 @@
-//constants
-const WHITE = [255, 255, 255, 255];
-const BLACK = [0, 0, 0, 255];
-const EMPTY = [0, 0, 0, 0];
-const BLUE = [0, 7, 100, 255];
-const GRAY = [237, 255, 255, 255];
-const YELLOW = [255, 170, 0, 255];
-
-
 /* main code */
 const canvas = document.getElementById('mandelbrotCanvas');
 const ctx = canvas.getContext('2d');
@@ -16,17 +7,23 @@ let iterations = 20;
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-const SCREENFACTOR = canvas.width / canvas.height;
+let screenFactor = canvas.width / canvas.height;
 
-const imageData = ctx.createImageData(canvas.width, canvas.height);
-const data = imageData.data;
+let worker = null;
+drawWorker();
 
-queueMicrotask(draw);
+addEventListener("resize", () =>{
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    screenFactor = canvas.width / canvas.height;
+    drawWorker();
+})
 
 canvas.addEventListener("click", (e) =>{
+    //console.log("canvas clicked!")
     offset[0] = columnToPlaneX(e.offsetX);
     offset[1] = rowToPlaneY(e.offsetY);
-    draw();
+    drawWorker();
 });
 
 canvas.addEventListener("wheel", (e) =>{
@@ -38,53 +35,37 @@ canvas.addEventListener("wheel", (e) =>{
         zoom[0] /= 5;
         zoom[1] /= 5;
     }
-    draw();
+    drawWorker();
 }, { passive: false });
 
 let sliderIterations = document.getElementById("sliderIterations");
-sliderIterations.addEventListener("click", () =>{
+sliderIterations.addEventListener("input", () =>{
     iterations = sliderIterations.value;
-    draw();
+    drawWorker();
 })
 
 
 /* definitions */
-function draw(){
-    for(let r = 0; r < canvas.height; r++){
-        for(let c = 0; c < canvas.width; c++){
-            setPixelColor(r, c);
+function drawWorker(){
+    if(worker) worker.terminate();
+    worker = new Worker("drawWorker.js");
+    worker.postMessage(
+        {
+            width: canvas.width, 
+            height: canvas.height, 
+            params: {offset, zoom, iterations}
         }
-    }
-    ctx.putImageData(imageData, 0, 0);
-}
-
-function setPixelColor(r, c){
-    let pixel = WHITE;
-    const x = columnToPlaneX(c);
-    const y = rowToPlaneY(r);
-    
-    //main algo
-    let real = x, imaginary = y, factorReal = x, factorImg = y;
-    for(let i = 0; i <= iterations; i++){
-        let temp = real;
-        real = real ** 2 - imaginary ** 2 + factorReal;
-        imaginary = 2 * temp * imaginary + factorImg;
-    }
-    
-    //map to color
-    if(real <= 1) pixel = BLACK;
-
-    //set pixel's rgba
-    let dataIdx = 4 * (r * canvas.width + c); // each pixel is 4 unsigned bytes in order: r g b a
-    [pr, pg, pb ,pa] = pixel;
-    data[dataIdx] = pr;
-    data[dataIdx + 1] = pg;
-    data[dataIdx + 2] = pb;
-    data[dataIdx + 3] = pa;
+    );
+    worker.addEventListener("message", ({data: {buffer, width, height}}) =>{
+        //console.log("answer received: ", buffer, width, height);
+        const imageData = new ImageData(new Uint8ClampedArray(buffer), width, height);
+        ctx.putImageData(imageData, 0, 0);
+        console.timeEnd("render: ");
+    }, {once: true});
 }
 
 function columnToPlaneX(c){
-    return (2 * (c / canvas.width) - 1)  * SCREENFACTOR / zoom[0] + offset[0];
+    return (2 * (c / canvas.width) - 1)  * screenFactor / zoom[0] + offset[0];
 }
 
 function rowToPlaneY(r){
