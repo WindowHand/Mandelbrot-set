@@ -23,14 +23,6 @@ const data = imageData.data;
 
 queueMicrotask(draw);
 
-// document.getElementById("buttonOffset").addEventListener("click", () =>{
-//     canvas.addEventListener("click", (e) =>{
-//         offset[0] = columnToPlaneX(e.offsetX);
-//         offset[1] = rowToPlaneY(e.offsetY);
-//         draw();
-//     }, {once: true});
-// });
-
 canvas.addEventListener("click", (e) =>{
     offset[0] = columnToPlaneX(e.offsetX);
     offset[1] = rowToPlaneY(e.offsetY);
@@ -55,13 +47,13 @@ sliderIterations.addEventListener("click", () =>{
     draw();
 })
 
+
 /* definitions */
 function draw(){
     for(let r = 0; r < canvas.height; r++){
         for(let c = 0; c < canvas.width; c++){
             setPixelColor(r, c);
         }
-        //ctx.putImageData(imageData, 0, 0);
     }
     ctx.putImageData(imageData, 0, 0);
 }
