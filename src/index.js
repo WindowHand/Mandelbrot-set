@@ -47,7 +47,7 @@ sliderIterations.addEventListener("input", () =>{
 /* definitions */
 function drawWorker(){
     if(worker) worker.terminate();
-    worker = new Worker("drawWorker.js");
+    worker = new Worker("src/drawWorker.js");
     worker.postMessage(
         {
             width: canvas.width, 
