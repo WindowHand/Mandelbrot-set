@@ -4,7 +4,6 @@ const BLACK = [0, 0, 0, 255];
 
 /*main worker code*/
 self.onmessage = ({data: {width, height, params}}) =>{
-    //console.log("message received: ", width, height, params);
     const buffer = new Uint8ClampedArray(width * height * 4);
 
     for (let r = 0; r < height; r++){

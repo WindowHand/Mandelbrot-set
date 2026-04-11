@@ -20,7 +20,6 @@ addEventListener("resize", () =>{
 })
 
 canvas.addEventListener("click", (e) =>{
-    //console.log("canvas clicked!")
     offset[0] = columnToPlaneX(e.offsetX);
     offset[1] = rowToPlaneY(e.offsetY);
     drawWorker();
@@ -57,10 +56,8 @@ function drawWorker(){
         }
     );
     worker.addEventListener("message", ({data: {buffer, width, height}}) =>{
-        //console.log("answer received: ", buffer, width, height);
         const imageData = new ImageData(new Uint8ClampedArray(buffer), width, height);
         ctx.putImageData(imageData, 0, 0);
-        console.timeEnd("render: ");
     }, {once: true});
 }
 
